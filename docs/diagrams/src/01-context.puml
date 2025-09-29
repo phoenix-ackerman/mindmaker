@@ -1,0 +1,80 @@
+@startuml
+' If your PlantUML host supports includes:
+' !include <C4/C4_Context>
+
+' --- Fallback minimal styling if includes aren't available ---
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #666
+  Rounded 8
+}
+skinparam cloud {
+  BackgroundColor #f6f8fa
+  BorderColor #8b949e
+}
+skinparam database {
+  BackgroundColor #fff7ed
+  BorderColor #f59e0b
+}
+skinparam package {
+  BackgroundColor #eef6ff
+  BorderColor #1d4ed8
+}
+
+title MindMaker — System Context Diagram
+
+actor "User: Phoenix\n(Analyst/Learner)" as User
+cloud "Google Drive\n(Authoring Folder)" as Drive
+cloud "LLM Provider\n(Embeddings/RAG)" as LLM
+
+package "MindMaker — System Boundary" as MM {
+  package "Ingestion Service (Python)" as ING {
+    rectangle "Poll Drive API\n(modifiedTime > checkpoint)" as P1
+    rectangle "Export Docs → HTML" as P2
+    rectangle "Parse & Chunk\n(Headings, tags, links)" as P3
+    rectangle "Upsert → Postgres" as P4
+    rectangle "Embed New/Changed Sections" as P5
+  }
+
+  package "MindMaker API (FastAPI)" as API {
+    rectangle "Single Input Box\nMode: Answer / Quiz" as A1
+    rectangle "Hybrid Retrieval\n(BM25 + pgvector)" as A2
+    rectangle "Answer + Citations" as A3
+    rectangle "Quiz JSON (MCQ)\nDeterministic Grading" as A4
+    rectangle "Event Logging\n(queries, helpfulness,\nquiz attempts, accuracy)" as A5
+  }
+
+  package "Storage & Analytics" as DATA {
+    database "Postgres + pgvector\n(documents, sections, tags,\nlinks, events, quiz_*)" as PG
+    rectangle "Metabase Dashboards\n(coverage, intake, helpfulness,\naccuracy)" as MB
+  }
+}
+
+' Primary authoring flow
+User --> Drive : author notes
+Drive --> P1 : list/export HTML
+P1 --> P2
+P2 --> P3
+P3 --> P4
+P4 --> PG
+P5 --> PG : section.vector
+
+' Retrieval & UX
+User --> A1 : ask/quiz request
+A1 --> A2
+A2 --> PG : BM25 + vector search
+A2 --> A3 : top-k sections
+A2 --> A4 : top-k sections
+A3 --> User : answer + citations (section_id)
+A4 --> User : MCQs + sources
+User --> A5 : helpfulness / quiz choices
+A5 --> PG : events
+
+' Dashboards
+PG --> MB
+User --> MB : view dashboards
+
+' Optional externalities
+A2 ..> LLM : embed/query vector (optional)
+@enduml
