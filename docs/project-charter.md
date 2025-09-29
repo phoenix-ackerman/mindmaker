@@ -1,10 +1,12 @@
 # MindMaker — Project Charter
 ## Context Diagram
-<a href="docs/diagrams/export/01-context.svg">
-  <img src="docs/diagrams/export/01-context.png" alt="MindMaker Context Diagram" width="320">
+<a href="diagrams/export/01-context.svg">
+  <img src="diagrams/export/01-context.png" alt="MindMaker Context Diagram" width="600">
 </a>
 
-## 1) Project Name & One-liner
+*Open the scalable version:* [View SVG](diagrams/export/01-context.svg)
+
+## 1) Project Name & Overview
 MindMaker — Knowledge Analytics for Unstructured Docs
 
 *Transforms Google Docs into a queryable knowledge warehouse with traceable answers and quiz validation, plus Metabase learning analytics.*
