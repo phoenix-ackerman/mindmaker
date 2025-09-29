@@ -30,6 +30,8 @@ Interim milestones:
 - Nov 30, 2025: Unified Answer/Quiz flow with JSON-valid MCQs, event logging, screenshots.
 - Dec 31, 2025: Final case study, repo, video walkthrough.
 ## 5) Scope
+See [Requirements Document](requirements.md)
+
 In scope (MVP):
 - Google Docs ingestion (HTML export), hierarchical chunking, tags parsing.
 - Postgres schema (documents, sections, tags, links, events, quiz_*), pgvector embeddings, full-text index.
