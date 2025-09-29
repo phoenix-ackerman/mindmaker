@@ -1,0 +1,11 @@
+.env
+*.pyc
+__pycache__/
+.venv/
+.env.local
+.envrc
+.metabase/
+pg_data/
+mb_data/
+docs/diagrams/exports/*.png
+docs/diagrams/exports/*.svg
