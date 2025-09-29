@@ -1,4 +1,9 @@
 # MindMaker — Project Charter
+## Context Diagram
+<a href="docs/diagrams/export/01-context.svg">
+  <img src="docs/diagrams/export/01-context.png" alt="MindMaker Context Diagram" width="320">
+</a>
+
 ## 1) Project Name & One-liner
 MindMaker — Knowledge Analytics for Unstructured Docs
 
