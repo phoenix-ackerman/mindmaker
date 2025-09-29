@@ -1,0 +1,87 @@
+mindmaker/
+├─ README.md
+├─ LICENSE
+├─ .gitignore
+├─ .env.example                # sample env vars (never commit real secrets)
+├─ docker-compose.yml          # Postgres, pgvector, Metabase, API, ingestion
+├─ Makefile                    # one-liners: up, seed, test, lint, export
+├─ CHANGELOG.md                # human-readable, semver releases
+│
+├─ docs/                       # Portfolio-facing content (built to GitHub Pages)
+│  ├─ index.md                 # landing page: what, why, demo links
+│  ├─ case-study.md            # problem → design → process → insights
+│  ├─ setup.md                 # quickstart for reviewers
+│  ├─ diagrams/                # source-of-truth diagrams (Mermaid) + exports
+│  │  ├─ context.mmd
+│  │  ├─ erd.mmd
+│  │  ├─ flows.mmd
+│  │  ├─ architecture.mmd
+│  │  └─ exports/              # auto-generated PNG/SVG from .mmd
+│  ├─ dashboards/              # screenshots + JSON exports for Metabase
+│  │  ├─ intake_growth.png
+│  │  ├─ connectivity.png
+│  │  ├─ effectiveness.png
+│  │  └─ exports/              # API-exported dashboard JSON (no secrets)
+│  ├─ requirements.md          # MVP + NFR + acceptance criteria
+│  ├─ test-plan.md             # manual test cases & evidence links
+│  ├─ project-charter.md
+│  └─ governance.md            # roles, decisions, risk log
+│
+├─ sql/
+│  ├─ migrations/              # schema changes (timestamped .sql)
+│  │  ├─ 2025-10-01_init.sql
+│  │  └─ 2025-10-15_add_quiz.sql
+│  ├─ seeds/                   # demo/fixture data for recruiters
+│  │  └─ sample_sections.sql
+│  ├─ analytics/               # portfolio queries shown in case study
+│  │  ├─ domain_coverage.sql
+│  │  ├─ link_density.sql
+│  │  └─ retrieval_helpfulness.sql
+│  └─ views/                   # optional materialized views
+│
+├─ ingestion/
+│  ├─ requirements.txt
+│  ├─ config.yaml              # polling interval, folder IDs (env-ref only)
+│  ├─ main.py                  # entrypoint: poll → export HTML → chunk → upsert
+│  ├─ chunker.py               # 400-token chunks, heading path logic
+│  ├─ drive_client.py          # Google API; uses env creds
+│  ├─ db.py                    # upserts; idempotent
+│  └─ embeddings.py            # pgvector writes; batching
+│
+├─ api/
+│  ├─ requirements.txt
+│  ├─ app.py                   # FastAPI: /ask, /quiz, /concept
+│  ├─ retrieval.py             # hybrid BM25 + vector merge
+│  ├─ models.py                # pydantic schemas: quiz JSON contract
+│  ├─ grading.py               # deterministic scoring
+│  ├─ storage.py               # DB access (SQL, pooling)
+│  └─ tests/
+│     ├─ test_quiz_schema.py   # enforces unique choices, single answer, sources
+│     └─ test_retrieval.py
+│
+├─ ui/                         # optional thin UI (Next.js or HTMX)
+│  ├─ package.json
+│  ├─ public/
+│  └─ src/
+│     ├─ pages/
+│     └─ components/
+│
+├─ metabase/
+│  ├─ docker/                  # Metabase service config (if customized)
+│  ├─ api/                     # scripts to export/import dashboards via API
+│  │  ├─ export_dashboards.py
+│  │  └─ README.md
+│  └─ cards/                   # saved queries (optional JSON)
+│
+├─ tools/
+│  ├─ generate_diagrams.sh     # render Mermaid → PNG/SVG for /docs/diagrams/exports
+│  ├─ export_metabase.sh       # call metabase/api/export_dashboards.py
+│  └─ seed_demo.sh             # load sample SQL + demo docs for recruiters
+│
+├─ sample_data/                # tiny sanitized doc exports (HTML) for demo
+│  └─ example_doc1.html
+│
+└─ .github/
+   └─ workflows/
+      ├─ ci.yml                # lint + unit tests + diagram generation
+      └─ pages.yml             # build & deploy MkDocs to GitHub Pages
